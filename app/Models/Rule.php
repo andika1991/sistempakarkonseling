@@ -30,8 +30,15 @@ class Rule extends Model
     /**
      * Get the solution associated with the rule.
      */
+    public function symptoms()
+    {
+        return $this->belongsToMany(Symptom::class, 'rule_symptom', 'rule_id', 'symptom_id');
+    }
+
+    // Relasi dengan solutions (sesuai struktur yang Anda miliki)
     public function solution()
     {
-        return $this->belongsTo(Solution::class, 'solution_code', 'code');
+        return $this->belongsTo(Solution::class, 'solution_id');
     }
+
 }

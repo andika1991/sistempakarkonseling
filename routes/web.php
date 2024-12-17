@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+use App\Http\Controllers\CounselingController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CounselingController::class, 'showExpertSystem'])->name('home');
+
+
+Route::post('/save-consultation', [CounselingController::class, 'saveConsultation'])->name('save.consultation');
+
+

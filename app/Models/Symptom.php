@@ -9,30 +9,15 @@ class Symptom extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
+    // Nama tabel yang terkait dengan model ini
     protected $table = 'symptoms';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    // Kolom yang dapat diisi (fillable)
     protected $fillable = [
-        'code',
-        'name',
+        'code',  // Kode gejala
+        'name',  // Nama gejala
     ];
 
-    /**
-     * Get the rules associated with the symptom.
-     *
-     * (Optional: If symptoms are linked to rules in the system)
-     */
-    public function rules()
-    {
-        return $this->belongsToMany(Rule::class, 'rule_symptom', 'symptom_id', 'rule_id');
-    }
+    // Jika Anda ingin memisahkan kode gejala dan nama gejala yang dikembalikan dalam bentuk string
+    // Anda bisa mengatur cast atau appends jika diperlukan
 }
