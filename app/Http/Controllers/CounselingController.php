@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Symptom;
-use App\Models\Solutions;
+use App\Models\Solution;
 use App\Models\Rule;
 use App\Models\DaftarKonsultasi;
 
@@ -14,7 +14,7 @@ class CounselingController extends Controller
     {
         // Ambil data dari database
         $symptoms = Symptom::all(); // Mengambil semua data dari tabel symptoms
-        $solutions = Solutions::all(); // Mengambil semua data dari tabel solutions
+        $solutions = Solution::all(); // Mengambil semua data dari tabel solutions
         $rules = Rule::all(); // Mengambil semua data dari tabel rules
 
         // Kirim data ke view

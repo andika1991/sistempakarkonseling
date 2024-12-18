@@ -12,6 +12,11 @@
                     {{ __("You're logged in!") }}
                 </div>
             </div>
+
+            <!-- Include Halaman Sistem Pakar -->
+            <div class="mt-6">
+                @include('pakar', ['symptoms' => $symptoms, 'rules' => $rules, 'solutions' => $solutions])
+            </div>
         </div>
     </div>
 </x-app-layout>
