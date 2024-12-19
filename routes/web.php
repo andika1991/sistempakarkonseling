@@ -18,15 +18,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Rute Halaman Utama
-Route::get('/', [CounselingController::class, 'showExpertSystem'])->name('home');
+// Rute Halaman Utama (Default ke pakar)
+Route::get('/', function () {
+    return redirect()->route('pakar'); // Arahkan langsung ke halaman pakar
+})->name('home');
+
+// Rute Halaman Pakar
+Route::get('/pakar', [CounselingController::class, 'showExpertSystem'])->name('pakar');
 
 // Rute Simpan Konsultasi
 Route::post('/save-consultation', [CounselingController::class, 'saveConsultation'])->name('save.consultation');
 
 // Rute Dashboard (Laravel Breeze)
 Route::get('/dashboard', function () {
-    // From database
+    // Ambil data dari database
     $symptoms = Symptom::all();
     $rules = Rule::all();
     $solutions = Solution::all();
@@ -34,16 +39,16 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('symptoms', 'rules', 'solutions')); // Halaman dashboard utama
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rute untuk Menambahkan pakar.blade.php ke Dashboard
+// Rute Grup dengan Middleware Auth
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard/pakar', function () {
-        return view('pakar'); // Mengarahkan ke halaman pakar.blade.php
-    })->name('dashboard.pakar');
+    // Halaman Pakar di Dashboard
+    Route::get('/dashboard/pakar', [CounselingController::class, 'showExpertSystem'])->name('dashboard.pakar');
 
-    // Rute Profile dari Laravel Breeze
+    // Profile dari Laravel Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Include Auth Routes
 require __DIR__.'/auth.php';
