@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CounselingController;
+use App\Http\Controllers\FaqGroupController;
 use App\Models\Symptom;
 use App\Models\Rule;
 use App\Models\Solution;
@@ -23,6 +24,11 @@ use App\Http\Controllers\DaftarKonsultasiController;
 Route::get('/', function () {
     return view('welcome'); // Default Laravel Breeze Welcome Page
 })->name('home');
+
+// Rute FAQ
+Route::get('/faq', function () {
+    return view('faq'); // Menampilkan halaman FAQ
+})->name('faq');
 
 // Rute Halaman Pakar
 Route::get('/pakar', [CounselingController::class, 'showExpertSystem'])->name('pakar');
@@ -53,6 +59,13 @@ Route::middleware(['auth'])->group(function () {
     // Daftar Konsultasi
     Route::get('/daftarkonsultasi', [DaftarKonsultasiController::class, 'index'])->name('daftarkonsultasi');
     Route::delete('/konsultasi/{id}', [DaftarKonsultasiController::class, 'destroy'])->name('konsultasi.destroy');
+
+    // FAQ
+    Route::get('/faq', [FaqGroupController::class, 'index'])->name('faq');
+    Route::post('/faq/groups', [FaqGroupController::class, 'store'])->name('faq.groups.store');
+    Route::get('/faq/groups/{id}/edit', [FaqGroupController::class, 'edit'])->name('faq.groups.edit');
+    Route::patch('/faq/groups/{id}', [FaqGroupController::class, 'update'])->name('faq.groups.update');
+    Route::delete('/faq/groups/{id}', [FaqGroupController::class, 'destroy'])->name('faq.groups.destroy');
 });
 
 // Include Auth Routes
