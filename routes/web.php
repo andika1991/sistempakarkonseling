@@ -7,6 +7,7 @@ use App\Models\Rule;
 use App\Models\Solution;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DaftarKonsultasiController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,9 +19,9 @@ use App\Http\Controllers\DaftarKonsultasiController;
 |
 */
 
-// Rute Halaman Utama (Default ke pakar)
+// Halaman Welcome (Log Out)
 Route::get('/', function () {
-    return redirect()->route('pakar'); // Arahkan langsung ke halaman pakar
+    return view('welcome'); // Default Laravel Breeze Welcome Page
 })->name('home');
 
 // Rute Halaman Pakar
@@ -49,11 +50,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-  
-Route::delete('/konsultasi/{id}', [DaftarKonsultasiController::class, 'destroy'])->name('konsultasi.destroy');
-
-Route::get('/daftarkonsultasi', [DaftarKonsultasiController::class, 'index'])->name('daftarkonsultasi');
-
+    // Daftar Konsultasi
+    Route::get('/daftarkonsultasi', [DaftarKonsultasiController::class, 'index'])->name('daftarkonsultasi');
+    Route::delete('/konsultasi/{id}', [DaftarKonsultasiController::class, 'destroy'])->name('konsultasi.destroy');
 });
 
 // Include Auth Routes
