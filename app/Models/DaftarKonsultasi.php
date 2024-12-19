@@ -28,15 +28,8 @@ class DaftarKonsultasi extends Model
         'accuracy',           // Akurasi hasil diagnosis
     ];
 
-    /**
-     * Menyatakan bahwa kolom 'selected_symptoms' adalah JSON.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'selected_symptoms' => 'array',
-    ];
-
+ 
+ 
     /**
      * Relasi ke tabel `solutions`.
      * 
