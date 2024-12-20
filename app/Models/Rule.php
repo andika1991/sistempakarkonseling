@@ -25,6 +25,8 @@ class Rule extends Model
         'behavior_code',
         'symptoms',
         'solution_code',
+        'mb',
+        'md',
     ];
 
     /**

@@ -59,8 +59,8 @@
                     <input type="text" name="accuracy" id="result_accuracy" readonly
                            class="w-full px-4 py-2 border bg-gray-100 rounded">
                 </div>
-                <!-- Hidden Input -->
                 <input type="hidden" name="solution_code" id="hidden_solution_code">
+                <input type="hidden" name="selected_symptoms" id="hidden_selected_symptoms">
 
                 <button type="submit"
                         class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600">
@@ -98,32 +98,44 @@
             showNextQuestion();
         }
 
-        function recordAnswer(answer) {
-            if (answer) {
-                selectedSymptoms.push(symptoms[currentQuestionIndex].code);
-            }
+        function recordAnswer(weight) {
+            const symptomCode = symptoms[currentQuestionIndex].code;
+            selectedSymptoms.push({ symptom: symptomCode, weight });
             currentQuestionIndex++;
             showNextQuestion();
         }
 
-        function getBestMatch() {
-            let bestMatch = null;
-            let highestAccuracy = 0;
+        function calculateCertaintyFactor() {
+            let solutionScores = {};
 
             rules.forEach(rule => {
                 const ruleSymptoms = rule.symptoms.split(',');
-                const matchCount = selectedSymptoms.filter(symptom => ruleSymptoms.includes(symptom)).length;
+                let cfCombine = 0;
 
-                const totalConsideredSymptoms = new Set([...ruleSymptoms, ...selectedSymptoms]).size;
-                const accuracy = (matchCount / totalConsideredSymptoms) * 100;
+                ruleSymptoms.forEach(symptomCode => {
+                    const userSymptom = selectedSymptoms.find(s => s.symptom === symptomCode);
 
-                if (accuracy > highestAccuracy) {
-                    highestAccuracy = accuracy;
-                    bestMatch = { rule, accuracy };
+                    if (userSymptom) {
+                        const cfRule = rule.mb - rule.md;
+                        const cfUser = userSymptom.weight;
+                        const cfCurrent = cfRule * cfUser;
+                        cfCombine = cfCombine + cfCurrent * (1 - cfCombine);
+                    }
+                });
+
+                if (cfCombine > 0) {
+                    solutionScores[rule.solution_code] = cfCombine;
                 }
             });
 
-            return bestMatch;
+            const bestSolution = Object.keys(solutionScores).reduce((best, solutionCode) => {
+                if (solutionScores[solutionCode] > (solutionScores[best] || 0)) {
+                    return solutionCode;
+                }
+                return best;
+            }, null);
+
+            displayResult(bestSolution, solutionScores[bestSolution]);
         }
 
         function showNextQuestion() {
@@ -131,29 +143,41 @@
 
             if (currentQuestionIndex >= symptoms.length) {
                 questionContainer.classList.add("hidden");
-
-                const bestMatch = getBestMatch();
-                if (bestMatch) {
-                    const solution = solutions.find(sol => sol.code === bestMatch.rule.solution_code);
-
-                    document.getElementById('resultForm').classList.remove("hidden");
-                    document.getElementById('result_name').value = studentName;
-                    document.getElementById('result_class').value = studentClass;
-                    document.getElementById('result_solution').value = solution ? solution.description : 'Solusi tidak ditemukan';
-                    document.getElementById('hidden_solution_code').value = solution ? solution.code : 'N/A';
-                    document.getElementById('result_accuracy').value = bestMatch.accuracy.toFixed(2);
-                } else {
-                    alert("Tidak ada solusi yang cocok dengan gejala yang dipilih.");
-                }
+                calculateCertaintyFactor();
                 return;
             }
 
             const symptom = symptoms[currentQuestionIndex];
             questionContainer.innerHTML = `
                 <h2 class="text-lg font-semibold text-gray-700">${symptom.name}?</h2>
-                <button onclick="recordAnswer(true)" class="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600">Ya</button>
-                <button onclick="recordAnswer(false)" class="w-full bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600">Tidak</button>
+  <div class="space-y-2">
+    <button onclick="recordAnswer(0.0)" class="w-full bg-gray-500 text-white font-semibold py-2 rounded hover:bg-gray-600">Tidak Yakin</button>
+    <button onclick="recordAnswer(0.2)" class="w-full bg-red-500 text-white font-semibold py-2 rounded hover:bg-red-600">Kurang Yakin</button>
+    <button onclick="recordAnswer(0.4)" class="w-full bg-yellow-500 text-white font-semibold py-2 rounded hover:bg-yellow-600">Ragu-Ragu</button>
+    <button onclick="recordAnswer(0.6)" class="w-full bg-blue-500 text-white font-semibold py-2 rounded hover:bg-blue-600">Cukup Yakin</button>
+    <button onclick="recordAnswer(0.8)" class="w-full bg-green-500 text-white font-semibold py-2 rounded hover:bg-green-600">Yakin</button>
+    <button onclick="recordAnswer(1.0)" class="w-full bg-green-700 text-white font-semibold py-2 rounded hover:bg-green-800">Sangat Yakin</button>
+</div>
+
+
             `;
+        }
+
+        function displayResult(solutionCode, cf) {
+            const solution = solutions.find(sol => sol.code === solutionCode);
+
+            if (solution) {
+                document.getElementById('resultForm').classList.remove("hidden");
+                document.getElementById('result_name').value = studentName;
+                document.getElementById('result_class').value = studentClass;
+                document.getElementById('result_solution').value = solution.description;
+                document.getElementById('hidden_solution_code').value = solution.code;
+                document.getElementById('result_accuracy').value = (cf * 100).toFixed(2) + "%";
+            } else {
+                alert("Tidak ada solusi yang cocok berdasarkan gejala yang diberikan.");
+            }
+
+            document.getElementById('hidden_selected_symptoms').value = JSON.stringify(selectedSymptoms);
         }
     </script>
 </body>

@@ -24,6 +24,7 @@ class Solution extends Model
     protected $fillable = [
         'code',
         'description',
+        
     ];
 
     /**

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             SymptomsSeeder::class,
             SolutionsSeeder::class,
             RulesSeeder::class,
+            RulesecSeeder::class,
         ]);
     }
     

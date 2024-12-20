@@ -24,6 +24,7 @@ Route::get('/', [CounselingController::class, 'showExpertSystem'])->name('home')
 // Rute Simpan Konsultasi
 Route::post('/save-consultation', [CounselingController::class, 'saveConsultation'])->name('save.consultation');
 
+
 // Rute Dashboard (Laravel Breeze)
 Route::get('/dashboard', function () {
     // From database

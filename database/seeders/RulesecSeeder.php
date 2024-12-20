@@ -5,11 +5,13 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class RulesSeeder extends Seeder
+class Rulesec extends Seeder
 {
     public function run()
     {
-        $rules = [
+        // Data gejala untuk diinsert
+        $data = [
+            // Data untuk solusi S1
             ['symptoms' => 'G001', 'solution_code' => 'S1', 'mb' => 1.0, 'md' => 0.0],
             ['symptoms' => 'G002', 'solution_code' => 'S1', 'mb' => 0.8, 'md' => 0.2],
             ['symptoms' => 'G003', 'solution_code' => 'S1', 'mb' => 0.6, 'md' => 0.4],
@@ -51,6 +53,10 @@ class RulesSeeder extends Seeder
             ['symptoms' => 'G022', 'solution_code' => 'S7', 'mb' => 0.7, 'md' => 0.3],
             ['symptoms' => 'G023', 'solution_code' => 'S7', 'mb' => 0.9, 'md' => 0.1],
         ];
-        DB::table('rules')->insert($rules);
+
+        // Insert data ke dalam tabel
+        foreach ($data as $item) {
+            DB::table('rules')->insert($item);
+        }
     }
 }

@@ -21,26 +21,41 @@ class CounselingController extends Controller
         return view('pakar', compact('symptoms', 'rules', 'solutions'));
     }
 
-    public function saveConsultation(Request $request)
+    public function saveconsultation(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'class' => 'required|string|max:255',
-            'solution_code' => 'required|string|max:255',
-            'accuracy' => 'required|numeric|min:0|max:100',
-        ]);
-
-        // Simpan data ke dalam database
-        $consultation = new DaftarKonsultasi();
-        $consultation->name = $validated['name'];
-        $consultation->class = $validated['class'];
-        $consultation->solution_code = $validated['solution_code'];
-        $consultation->accuracy = $validated['accuracy'];
-        $consultation->save();
-
-        // Redirect atau memberikan response setelah data berhasil disimpan
-        return redirect()->route('home')->with('success', 'Hasil diagnosis berhasil disimpan!');
+        try {
+       
+    
+            // Validate the data
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'class' => 'required|string|max:255',
+                'solution_code' => 'required|string|max:255',
+                'accuracy' => 'required',
+                'selected_symptoms' => 'required|string', // Assuming this field holds selected symptoms
+            ]);
+    
+          
+    
+            // Save the data to the database
+            $consultation = DaftarKonsultasi::create([
+                'name' => $validated['name'],
+                'class' => $validated['class'],
+                'solution_code' => $validated['solution_code'],
+                'accuracy' => $validated['accuracy'],
+                'selected_symptoms' => $validated['selected_symptoms'],
+            ]);
+    
+          
+    
+            return redirect()->back()->with('success', 'Hasil konsultasi berhasil disimpan.');
+        } catch (\Exception $e) {
+       
+  
+    
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan hasil konsultasi. Silakan coba lagi.');
+        }
     }
+    
     
 }
