@@ -59,7 +59,7 @@
                                     <td class="border px-4 py-2">{{ $konsultasi->name }}</td>
                                     <td class="border px-4 py-2">{{ $konsultasi->class }}</td>
                                     <td class="border px-4 py-2">{{ $konsultasi->solution_code }}</td>
-                                    <td class="border px-4 py-2">{{ $konsultasi->accuracy }}%</td>
+                                    <td class="border px-4 py-2">{{ $konsultasi->accuracy }}</td>
                                     <td class="border px-4 py-2">
                                         {{ $konsultasi->solution->description ?? __('Tidak ada deskripsi') }}
                                     </td>

@@ -16,6 +16,11 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    <!-- About Link -->
+                    <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
+                        {{ __('About') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('daftarkonsultasi')" :active="request()->routeIs('daftarkonsultasi')">
                         {{ __('Daftar Konsultasi') }}
                     </x-nav-link>
@@ -24,6 +29,7 @@
                     <x-nav-link :href="route('faq')" :active="request()->routeIs('faq')">
                         {{ __('FAQ') }}
                     </x-nav-link>
+
                 </div>
             </div>
 

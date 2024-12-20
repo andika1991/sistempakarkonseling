@@ -30,6 +30,11 @@ Route::get('/faq', function () {
     return view('faq'); // Menampilkan halaman FAQ
 })->name('faq');
 
+// Rute About
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
 // Rute Halaman Pakar
 Route::get('/pakar', [CounselingController::class, 'showExpertSystem'])->name('pakar');
 
