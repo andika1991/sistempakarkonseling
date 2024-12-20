@@ -21,7 +21,7 @@ use App\Http\Controllers\DaftarKonsultasiController;
 */
 
 // Halaman Welcome (Log Out)
-Route::get('/', function () {
+Route::get('/pakar', function () {
     return view('welcome'); // Default Laravel Breeze Welcome Page
 })->name('home');
 
@@ -30,14 +30,23 @@ Route::get('/faq', function () {
     return view('faq'); // Menampilkan halaman FAQ
 })->name('faq');
 
+Route::get('/aboutuser', function () {
+    return view('aboutuser'); // Menampilkan halaman FAQ
+})->name('aboutuser');
+
+Route::get('/petunjuk', function () {
+    return view('petunjuk'); // Menampilkan halaman FAQ
+})->name('petunjuk');
+
+
 // Rute About
 Route::get('/about', function () {
     return view('about');
 })->name('about');
 
 // Rute Halaman Pakar
-Route::get('/pakar', [CounselingController::class, 'showExpertSystem'])->name('pakar');
-
+Route::get('/', [CounselingController::class, 'showExpertSystem'])->name('pakar');
+Route::get('/konsultasikonseling', [CounselingController::class, 'showform'])->name('pakar');
 // Rute Simpan Konsultasi
 Route::post('/save-consultation', [CounselingController::class, 'saveConsultation'])->name('save.consultation');
 

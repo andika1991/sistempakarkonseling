@@ -28,7 +28,7 @@
                 <ul class="list-disc pl-5 mb-6">
                     <li>Laravel Breeze untuk desain UI modern dan responsif.</li>
                     <li>PHP dan MySQL untuk backend dan manajemen database.</li>
-                    <li>Metode inferensi berbasis Forward Chaining dan Backward Chaining.</li>
+                    <li>Metode inferensi berbasis Forward Chaining .</li>
                 </ul>
 
                 <h4 class="text-lg font-semibold mb-4">{{ __('Referensi Penelitian') }}</h4>

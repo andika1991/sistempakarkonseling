@@ -12,13 +12,24 @@ class CounselingController extends Controller
 {
     public function showExpertSystem()
     {
-        // Ambil data dari database
-        $symptoms = Symptom::all(); // Mengambil semua data dari tabel symptoms
-        $solutions = Solution::all(); // Mengambil semua data dari tabel solutions
-        $rules = Rule::all(); // Mengambil semua data dari tabel rules
+       
+        $symptoms = Symptom::all(); 
+        $solutions = Solution::all(); 
+        $rules = Rule::all(); 
 
-        // Kirim data ke view
+      
         return view('pakar', compact('symptoms', 'rules', 'solutions'));
+    }
+
+    public function showform()
+    {
+       
+        $symptoms = Symptom::all(); 
+        $solutions = Solution::all(); 
+        $rules = Rule::all(); 
+
+      
+        return view('form', compact('symptoms', 'rules', 'solutions'));
     }
 
     public function saveconsultation(Request $request)
@@ -32,7 +43,7 @@ class CounselingController extends Controller
                 'class' => 'required|string|max:255',
                 'solution_code' => 'required|string|max:255',
                 'accuracy' => 'required',
-                'selected_symptoms' => 'required|string', // Assuming this field holds selected symptoms
+                'selected_symptoms' => 'required|string', 
             ]);
     
           
