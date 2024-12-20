@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CounselingController;
+use App\Http\Controllers\FaqGroupController;
 use App\Models\Symptom;
 use App\Models\Rule;
 use App\Models\Solution;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DaftarKonsultasiController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,8 +20,18 @@ use App\Http\Controllers\DaftarKonsultasiController;
 |
 */
 
-// Rute Halaman Utama
-Route::get('/', [CounselingController::class, 'showExpertSystem'])->name('home');
+// Halaman Welcome (Log Out)
+Route::get('/', function () {
+    return view('welcome'); // Default Laravel Breeze Welcome Page
+})->name('home');
+
+// Rute FAQ
+Route::get('/faq', function () {
+    return view('faq'); // Menampilkan halaman FAQ
+})->name('faq');
+
+// Rute Halaman Pakar
+Route::get('/pakar', [CounselingController::class, 'showExpertSystem'])->name('pakar');
 
 // Rute Simpan Konsultasi
 Route::post('/save-consultation', [CounselingController::class, 'saveConsultation'])->name('save.consultation');
@@ -27,7 +39,7 @@ Route::post('/save-consultation', [CounselingController::class, 'saveConsultatio
 
 // Rute Dashboard (Laravel Breeze)
 Route::get('/dashboard', function () {
-    // From database
+    // Ambil data dari database
     $symptoms = Symptom::all();
     $rules = Rule::all();
     $solutions = Solution::all();
@@ -35,22 +47,27 @@ Route::get('/dashboard', function () {
     return view('dashboard', compact('symptoms', 'rules', 'solutions')); // Halaman dashboard utama
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Rute untuk Menambahkan pakar.blade.php ke Dashboard
+// Rute Grup dengan Middleware Auth
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard/pakar', function () {
-        return view('pakar'); // Mengarahkan ke halaman pakar.blade.php
-    })->name('dashboard.pakar');
+    // Halaman Pakar di Dashboard
+    Route::get('/dashboard/pakar', [CounselingController::class, 'showExpertSystem'])->name('dashboard.pakar');
 
-    // Rute Profile dari Laravel Breeze
+    // Profile dari Laravel Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-  
-Route::delete('/konsultasi/{id}', [DaftarKonsultasiController::class, 'destroy'])->name('konsultasi.destroy');
+    // Daftar Konsultasi
+    Route::get('/daftarkonsultasi', [DaftarKonsultasiController::class, 'index'])->name('daftarkonsultasi');
+    Route::delete('/konsultasi/{id}', [DaftarKonsultasiController::class, 'destroy'])->name('konsultasi.destroy');
 
-Route::get('/daftarkonsultasi', [DaftarKonsultasiController::class, 'index'])->name('daftarkonsultasi');
-
+    // FAQ
+    Route::get('/faq', [FaqGroupController::class, 'index'])->name('faq');
+    Route::post('/faq/groups', [FaqGroupController::class, 'store'])->name('faq.groups.store');
+    Route::get('/faq/groups/{id}/edit', [FaqGroupController::class, 'edit'])->name('faq.groups.edit');
+    Route::patch('/faq/groups/{id}', [FaqGroupController::class, 'update'])->name('faq.groups.update');
+    Route::delete('/faq/groups/{id}', [FaqGroupController::class, 'destroy'])->name('faq.groups.destroy');
 });
 
+// Include Auth Routes
 require __DIR__.'/auth.php';
